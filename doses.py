@@ -1,5 +1,5 @@
 import numpy as np
-from CPP import *
+from cpp import *
 
 def doses(x, Fs, time, SPL, F0, gender, f0min, f0max, no_cal):
     '''

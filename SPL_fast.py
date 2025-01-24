@@ -1,6 +1,6 @@
 import numpy as np
 from estimate_energy_level import *
-from CPP import CPP
+from cpp import CPP
 
 def SPL_fast(x, Fs):
     '''

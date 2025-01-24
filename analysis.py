@@ -4,8 +4,9 @@ from doses import *
 import pandas as pd
 import os
 import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.use('TkAgg')
 import soundfile as sf
-from scipy.interpolate import CubicSpline
 
 def audioread(file):
     '''
