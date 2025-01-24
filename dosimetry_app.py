@@ -4,7 +4,6 @@ from tkinter import filedialog
 from analysis import *
 import os
 import threading
-import webbrowser
 
 def gender_interface(user_input, root):
     '''
@@ -197,13 +196,13 @@ def error_check(user_input):
     else:
         # If plot lock is locked, a plot window is already open so prevent the analysis from running
         if not plot_lock.locked():
-            time_step, audio, windowTime, SPL, F0, vocal_doses = analysis(cal_files, cal_levels, monitoring, gender, save)
+            time_step, audio, windowTime, SPL, F0, CPP, vocal_doses = analysis(cal_files, cal_levels, monitoring, gender, save)
             message = "Analysis results have been saved under " + os.path.basename(save) + "."
             messagebox.showinfo(title="Data Saved", message=message)
 
             # Acquire the lock to prevent multiple plot windows
             plot_lock.acquire_lock()
-            display_data(time_step, audio, windowTime, SPL, F0, vocal_doses)
+            display_data(time_step, audio, windowTime, SPL, F0, CPP, vocal_doses)
             plot_lock.release_lock()
         else:
             messagebox.showerror(title="Error", message="Please close the existing plot window before opening a new one.")
@@ -228,7 +227,7 @@ def setup():
     Initializes and configures the main Tkinter GUI window for the Dosimetry App.
     '''
     master = tk.Tk()
-    master.geometry("650x500")
+    master.geometry("675x450")
     master.title("Dosimetry App")
     user_input = {"gender":tk.StringVar(value="no_selection"), 
                   "cal_levels":[],                      # List of calibration levels
@@ -259,10 +258,6 @@ def setup():
 
     reset_button = tk.Button(main_frame, text="Reset", command=lambda:reset(master))
     reset_button.pack(side=tk.LEFT, padx=20, pady=10)
-
-    git_label = tk.Label(master, text="View on GitHub", fg="blue", cursor="hand2")
-    git_label.pack(anchor=tk.W, padx=20, pady=10)
-    git_label.bind("<Button-1>", lambda x: webbrowser.open_new_tab("https://github.com/YehyaS/Dosimetry-App"))
 
     # Allow the scroll region to adjust dynamically
     main_frame.bind("<Configure>", on_frame_configure)

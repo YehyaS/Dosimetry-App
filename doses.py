@@ -1,5 +1,5 @@
 import numpy as np
-from cpp import *
+from CPP import *
 
 def doses(x, Fs, time, SPL, F0, gender, f0min, f0max, no_cal):
     '''
@@ -26,35 +26,29 @@ def doses(x, Fs, time, SPL, F0, gender, f0min, f0max, no_cal):
             Truth value for whether the data is calibrated
     Returns:
         Dt : float
-            Time dose, total duration of voicing in seconds, reflecting vocal 
-            fold vibration
+            Total duration of voicing, only considering voicing periods 
+            with defined values of SPL and F0
         VLI : float
-            Vocal loading index, in kcycles, measures the total number of 
-            vocal-fold oscillatory periods, taking into account the fundamental 
-            frequency and the duration of oscillation
+            Vocal Load Index, reflecting cumulative vocal effort over time
         Dd : float
-            Distance Dose, in meters, measures the displacement accumulated by
-            the vocal folds due to oscillation.
+            Dynamic Dose, indicates the amount of vocal fold activity
             Undefined if gender is "other" or no calibration file was provided
         De : float
-            Energy Dissipation Dose, in J/m^3, reflects the total amount of
-            energy dissipated into heat per a unit volume of vocal fold tissue.
+            Energy Dose, quantifies the energy dose delivered to vocal folds
             Undefined if gender is "other" or no calibration file was provided
         Dr : float
-            Radiated Energy Dose, in Joules, measures the total energy radiated 
-            from the mouth during phonation.
+            Radiated Dose, represents the sound energy radiated from vocal folds
             Undefined if gender is "other" or no calibration file was provided
         Dt_percentage : float
-            Time dose (percentage): The ratio of the voiced frames over the total 
-            recording duration
+            Percentage of the total time during which voicing occurs
         Dd_norm : float
-            Normalized Distance Dose, Dd normalized by total duration of voicing.
+            Normalized Dynamic Dose, Dd normalized by total duration of voicing
             Undefined if gender is "other" or no calibration file was provided
         De_norm : float
-            Normalized Energy Dissipation Dose, De normalized by total duration of voicing.
+            Normalized Energy Dose, De normalized by total duration of voicing
             Undefined if gender is "other" or no calibration file was provided
         Dr_norm : float
-            Normalized Radiated Energy Dose, Dr normalized by total duration of voicing.
+            Normalized Radiated Dose, Dr normalized by total duration of voicing
             Undefined if gender is "other" or no calibration file was provided
         SPL_mean : float
             Average SPL value during voicing periods
@@ -65,8 +59,8 @@ def doses(x, Fs, time, SPL, F0, gender, f0min, f0max, no_cal):
         F0_sd : float
             Standard deviation of F0 during voicing periods
         cpp : float
-            Cepstral Peak Prominence, the magnitude of the cepstral peak relative 
-            to the amplitude of phonation. 
+            Cepstral Peak Prominence, higher CPP indicates a clearer and more
+            resonate voice.
     '''
     # Make sure that F0 and SPL are np arrays
     F0 = np.array(F0)
@@ -137,6 +131,6 @@ def doses(x, Fs, time, SPL, F0, gender, f0min, f0max, no_cal):
         De_norm = "--UNDEFINED--"
         Dr_norm = "--UNDEFINED--"
 
-    cpp = CPP(x, Fs, f0min, f0max)
+    cpp = CPP(x, Fs, f0min, f0max, 2**15)
 
     return Dt, VLI, Dd, De, Dr, Dt_percentage, Dd_norm, De_norm, Dr_norm, SPL_mean, F0_mean, SPL_sd, F0_sd, cpp

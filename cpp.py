@@ -1,6 +1,6 @@
 import numpy as np
 
-def CPP(x, Fs, f0min, f0max):
+def CPP(x, Fs, f0min, f0max, fft_size):
     '''
     *Credits to Mark Skowronski for developing the original function in matlab.
     This function calculates cepstral peak prominence (CPP) according to Hillenbrand et al. (1994).
@@ -22,7 +22,6 @@ def CPP(x, Fs, f0min, f0max):
     Hillenbrand, Cleveland, and Erickson, "Acoustic Correlates of Breathy Vocal Quality," JSHR, vol.
     37, pp. 769-778, Aug. 1994    
     '''
-    fft_size = 2**15
     Xabs = np.abs(np.fft.fft(x, fft_size))  # spectrum magnitude
     
     Hsmooth = [0.5, 1, 0.5]
@@ -32,8 +31,9 @@ def CPP(x, Fs, f0min, f0max):
 
     X = X-X.mean()  # zero mean
 
-    c = np.fft.ifft(X)  # real cepstrum 
-    C = 20*np.log10(np.abs(c))
+    c = np.fft.ifft(X)  # real cepstrum
+
+    C = 20*np.log10(np.abs([x if x != 0 else 1e-15 for x in c]))
 
     # Determine limits over which to search for peak in C and to perform cepstral baseline regression
     tRange = [np.ceil(Fs/f0max),np.floor(Fs/f0min)+1]

@@ -1,5 +1,6 @@
 import numpy as np
 from estimate_energy_level import *
+from CPP import CPP
 
 def SPL_fast(x, Fs):
     '''
@@ -41,15 +42,23 @@ def SPL_fast(x, Fs):
 
     return SPL_mean
 
-def SPL_fast_C_TH(x, Fs, C, time_step):
+def SPL_fast_C_TH_CPP(x, Fs, C, time_step, f0min, f0max):
     '''
-    Computes the mean of the Sound Pressure Level (SPL) using a custom window duration
-    and calibration constant. Used for processing the monitoring file.
+    Computes the Sound Pressure Level (SPL) and cepstral peak prominence (CPP)
+    using a custom window duration and calibration constant. Used for processing the monitoring file.
     Parameters:
         x : np.ndarray
             Input audio signal
         Fs : int
             Sampling rate of x
+        C : float
+            Calibration Constant
+        time_step : float
+            Time step in seconds
+        f0min : int
+            Minimum frequency to search for CPP (Cepstral Peak Prominence)
+        f0max : int
+            Maximum frequency to search for CPP (Cepstral Peak Prominence)
     Returns:
         SPL_mean : float
             Mean SPL over all windows of time
@@ -62,14 +71,16 @@ def SPL_fast_C_TH(x, Fs, C, time_step):
     N = int(time_step * Fs) # length of each window in samples
     windowStart = np.arange(0, len(x)-N, N) # start index for each window
     SPL = np.zeros(len(windowStart))
+    cpp = np.zeros_like(SPL)
     windowTime = t[windowStart + round((N - 1) / 2)]    # times at the middle of each window
     SPL_partial = np.zeros(len(windowStart))
 
-    # Calculate the SPL at each window
+    # Calculate the SPL and CPP at each window
     for i in range(len(windowStart)):
         SPL[i] = estimate_energy_level(x[windowStart[i] : windowStart[i] + N], Fs, C)
         SPL_partial[i] = SPL[i] * time_step
+        cpp[i] = CPP(x[windowStart[i] : windowStart[i] + N], Fs, f0min, f0max, 2**13)
 
     SPL_mean = np.sum(SPL_partial) / windowTime[-1]
 
-    return SPL_mean, SPL, windowTime
+    return SPL_mean, SPL, cpp, windowTime
