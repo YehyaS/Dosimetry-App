@@ -24,7 +24,9 @@ Alternatively, if you'd like to build the app yourself from the source code:
 
 Here are some visual tutorials to guide you through the process:
 - [Calibration Tutorial](https://youtu.be/YO5r1BUESJ0) (credits to Pasquale Bottalico)
-- [Software Demonstration](https://youtu.be/0-rT5NyHDTM) (credits to Charlie Nudelman)
+- [Windows Installation Demonstration](https://youtu.be/OpmGi_E7O3w) (credits to Charlie Nudelman)
+- [Mac Installation Demonstration](https://youtu.be/EBol4b_OJT8) (credits to Charlie Nudelman) 
+- [Software Demonstration](https://youtu.be/dcDRqRJ6uX0) (credits to Charlie Nudelman)
 
 ### Usage
 
