@@ -96,10 +96,11 @@ def analysis(cal_files, cal_levels, monitoring_file, gender, save_folder=""):
     F0 = praat_pitch(audio, Fs, time_step, f0min, f0max)
 
     # Step 5: Truncating time, SPL, F0 to the same length
-    lim = min(len(SPL), len(F0))
+    lim = min(len(SPL), len(F0), len(CPP))
     SPL = SPL[:lim]
     time_SPL_F0 = time_SPL_F0[:lim]
     F0 = F0[:lim]
+    CPP = CPP[:lim]
 
     # Step 6: Adjusting SPL based on the distance to the microphone
     distance_cal = 0.30
